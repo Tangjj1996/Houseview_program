@@ -6,7 +6,7 @@ const router = express.Router();
 const imgMappingTable = new ImgMapingTable();
 
 /**
- * middleware for binary file
+ * Middleware for binary file
  */
 const storage = multer.diskStorage({
   destination: function(req, filem, cb) {
@@ -20,12 +20,12 @@ const storage = multer.diskStorage({
 })
 
 /**
- * upload middlerware
+ * Upload middlerware
  */
 const upload = multer({ storage })
 
 /**
- * common result
+ * Common result
  * @example
  * {
  *  code: 200,
@@ -46,7 +46,7 @@ const defaultResult = ({ code = 200, msg = 'ok', status = 'success', success = t
 }
 
 /**
- * get all img data
+ * Get all img data
  */
 router.get('/getAll', (req, res) => {
   const data = imgMappingTable.getAll()
@@ -54,7 +54,7 @@ router.get('/getAll', (req, res) => {
 })
 
 /**
- * get img by id
+ * Get img by id
  */
 router.get('/getAssets/:id', (req, res) => {
   const id = req.params.id;
@@ -62,7 +62,7 @@ router.get('/getAssets/:id', (req, res) => {
 })
 
 /**
- * upload img with id(uniq)
+ * Upload img with id(uniq)
  */
 router.post('/upload', upload.single('file'), (req, res) => {
   res.send(defaultResult({}))

@@ -1,4 +1,4 @@
-export type TableMap = Map<number, { nick: string, name: string, id: number }>
+export type TableMap = Map<number, { nick: string, name: string, id: number, path: string }>
 
 export class ImgMapingTable {
   private tableMap: TableMap;
@@ -9,7 +9,7 @@ export class ImgMapingTable {
 
   insert(item: TableMap) {
     for (const id of item.keys()) {
-      this.tableMap.set(id, item.get(id))
+      this.tableMap.set(id, item.get(id));
     }
   }
 
