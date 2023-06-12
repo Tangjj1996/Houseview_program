@@ -19,8 +19,22 @@ const storage = multer.diskStorage({
   }
 })
 
+/**
+ * upload middlerware
+ */
 const upload = multer({ storage })
 
+/**
+ * common result
+ * @example
+ * {
+ *  code: 200,
+ *  msg: 'ok',
+ *  status: 'success',
+ *  data: null,
+ *  success: true
+ * }
+ */
 const defaultResult = ({ code = 200, msg = 'ok', status = 'success', success = true, data = null}) => {
   return {
     code,
@@ -31,16 +45,25 @@ const defaultResult = ({ code = 200, msg = 'ok', status = 'success', success = t
   }
 }
 
+/**
+ * get all img data
+ */
 router.get('/getAll', (req, res) => {
   const data = imgMappingTable.getAll()
   res.send(defaultResult({ data }))
 })
 
+/**
+ * get img by id
+ */
 router.get('/getAssets/:id', (req, res) => {
   const id = req.params.id;
   res.send(defaultResult({}))
 })
 
+/**
+ * upload img with id(uniq)
+ */
 router.post('/upload', upload.single('file'), (req, res) => {
   res.send(defaultResult({}))
 });
