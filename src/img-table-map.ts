@@ -1,7 +1,7 @@
-export type TableMap = Map<number, { nick: string, name: string }>
+export type TableMap = Map<number, { nick: string, name: string, id: number }>
 
 export class ImgMapingTable {
-  tableMap: TableMap
+  private tableMap: TableMap;
 
   constructor() {
     this.tableMap = new Map();
@@ -15,6 +15,14 @@ export class ImgMapingTable {
 
   getById(id: number) {
     return this.tableMap.get(id)
+  }
+
+  getAll() {
+    const list = []
+    for (const id of this.tableMap.keys()) {
+      list.push(this.tableMap.get(id))
+    }
+    return list;
   }
 
   deleteById(id: number) {

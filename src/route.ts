@@ -1,7 +1,9 @@
 import express from 'express';
 import multer from 'multer';
+import { ImgMapingTable } from './img-table-map';
 
 const router = express.Router();
+const imgMappingTable = new ImgMapingTable();
 
 /**
  * middleware for binary file
@@ -19,14 +21,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-const defaultResult = ({ code = 200, msg = 'ok', status = 'success', success = true }) => {
+const defaultResult = ({ code = 200, msg = 'ok', status = 'success', success = true, data = null}) => {
   return {
     code,
     msg,
     status,
+    data,
     success
   }
 }
+
+router.get('/getAll', (req, res) => {
+  const data = imgMappingTable.getAll()
+  res.send(defaultResult({ data }))
+})
 
 router.get('/getAssets/:id', (req, res) => {
   const id = req.params.id;
