@@ -1,4 +1,11 @@
-export type TableMap = Map<number, { nick: string, name: string, id: number, path: string }>
+export interface ImageValue {
+  nick: string; 
+  name: string;
+  id: number; 
+  path: string;
+}
+
+export type TableMap = Map<number, ImageValue>
 
 export class ImgMapingTable {
   private tableMap: TableMap;
@@ -18,7 +25,7 @@ export class ImgMapingTable {
   }
 
   getAll() {
-    const list = []
+    const list: ImageValue[] = []
     for (const id of this.tableMap.keys()) {
       list.push(this.tableMap.get(id))
     }
