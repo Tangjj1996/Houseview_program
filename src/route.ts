@@ -1,6 +1,9 @@
+import path from 'node:path'
 import express from 'express';
 import multer from 'multer';
 import { ImgMapingTable } from './img-table-map';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const router = express.Router();
 const imgMappingTable = new ImgMapingTable();
@@ -11,11 +14,11 @@ const imgMappingTable = new ImgMapingTable();
 const storage = multer.diskStorage({
   destination: function(req, filem, cb) {
     // upload dir
-    cb(null, '/assets')
+    cb(null, __dirname + '/assets')
   },
   filename: function(req, file, cb) {
     // uplload filename
-    cb(null, req.body().id + file.originalname)
+    cb(null, file.originalname)
   }
 })
 
@@ -65,7 +68,10 @@ router.get('/getAssets/:id', (req, res) => {
  * Upload img with id(uniq)
  */
 router.post('/upload', upload.single('file'), (req, res) => {
-  res.send(defaultResult({}))
+  res.send(defaultResult({ data: req.file ? {
+    id: req.body?.id,
+    ...req.file,
+  } : null }))
 });
 
 export default router
