@@ -1,7 +1,7 @@
 import path from "node:path";
 import express from "express";
 import multer from "multer";
-import { ImgMapingTable } from "./img-table-map";
+import { ImgMapingTable } from "./img-table-map.js";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 

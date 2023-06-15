@@ -19,7 +19,7 @@ await esbuild.build({
   entryPoints,
   bundle: false,
   platform: "node",
-  target: "node20",
+  target: "node18",
   format: "esm",
   outdir: "dist",
 });

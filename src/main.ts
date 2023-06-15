@@ -3,8 +3,8 @@ import express from "express";
 import chalk from "chalk";
 import dayjs from "dayjs";
 import cors from "cors";
-import config from "./config";
-import routes from "./route";
+import config from "./config.js";
+import routes from "./route.js";
 
 const app = express();
 

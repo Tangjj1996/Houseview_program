@@ -1,12 +1,15 @@
-FROM node:20
+FROM node:18
 
 WORKDIR /app
 
-COPY . .
 
 RUN npm install -g pnpm
-RUN npm install -g pm2
+COPY package.json .
+COPY pnpm-lock.yaml .
 RUN pnpm install
+
+COPY . .
+
 RUN pnpm build
 
-CMD [ "pm2", "start", 'dist/main.js' ]
+CMD ["node", "dist/main.js"]
