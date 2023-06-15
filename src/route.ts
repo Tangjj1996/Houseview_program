@@ -1,7 +1,7 @@
-import path from 'node:path'
-import express from 'express';
-import multer from 'multer';
-import { ImgMapingTable } from './img-table-map';
+import path from "node:path";
+import express from "express";
+import multer from "multer";
+import { ImgMapingTable } from "./img-table-map";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -12,20 +12,20 @@ const imgMappingTable = new ImgMapingTable();
  * Middleware for binary file
  */
 const storage = multer.diskStorage({
-  destination: function(req, filem, cb) {
+  destination: function (req, filem, cb) {
     // upload dir
-    cb(null, __dirname + '/assets')
+    cb(null, __dirname + "/assets");
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     // uplload filename
-    cb(null, file.originalname)
-  }
-})
+    cb(null, file.originalname);
+  },
+});
 
 /**
  * Upload middlerware
  */
-const upload = multer({ storage })
+const upload = multer({ storage });
 
 /**
  * Common result
@@ -38,40 +38,52 @@ const upload = multer({ storage })
  *  success: true
  * }
  */
-const defaultResult = ({ code = 200, msg = 'ok', status = 'success', success = true, data = null}) => {
+const defaultResult = ({
+  code = 200,
+  msg = "ok",
+  status = "success",
+  success = true,
+  data = null,
+}) => {
   return {
     code,
     msg,
     status,
     data,
-    success
-  }
-}
+    success,
+  };
+};
 
 /**
  * Get all img data
  */
-router.get('/getAll', (req, res) => {
-  const data = imgMappingTable.getAll()
-  res.send(defaultResult({ data }))
-})
+router.get("/getAll", (req, res) => {
+  const data = imgMappingTable.getAll();
+  res.send(defaultResult({ data }));
+});
 
 /**
  * Get img by id
  */
-router.get('/getAssets/:id', (req, res) => {
+router.get("/getAssets/:id", (req, res) => {
   const id = req.params.id;
-  res.send(defaultResult({}))
-})
+  res.send(defaultResult({}));
+});
 
 /**
  * Upload img with id(uniq)
  */
-router.post('/upload', upload.single('file'), (req, res) => {
-  res.send(defaultResult({ data: req.file ? {
-    id: req.body?.id,
-    ...req.file,
-  } : null }))
+router.post("/upload", upload.single("file"), (req, res) => {
+  res.send(
+    defaultResult({
+      data: req.file
+        ? {
+            id: req.body?.id,
+            ...req.file,
+          }
+        : null,
+    })
+  );
 });
 
-export default router
+export default router;
