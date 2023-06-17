@@ -3,6 +3,7 @@ import express from "express";
 import multer from "multer";
 import { ImgMapingTable } from "./img-table-map.js";
 import type { ResponseFile } from "./interface.js";
+import { PUBLIC_STATIC } from "./constance.js";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -86,10 +87,10 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 
   const data: ResponseFile = {};
 
-  data.filename = req.file.fieldname;
+  data.filename = req.file.filename;
   data.mimetype = req.file.mimetype;
   data.originalname = req.file.originalname;
-  data.path = req.file.path;
+  data.path = PUBLIC_STATIC + "/" + req.file.filename;
   data.size = req.file.size;
 
   await imgMappingTable.insert(data);

@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import cors from "cors";
 import config from "./config.js";
 import routes from "./route.js";
+import { PUBLIC_STATIC, TARGET_STATIC } from "./constance.js";
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.use(express.json());
 /**
  * Static assets middleware
  */
-app.use("/static", express.static("src/assets"));
+app.use(PUBLIC_STATIC, express.static(TARGET_STATIC));
 
 /**
  * Global route
