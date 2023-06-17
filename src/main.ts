@@ -24,6 +24,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 /**
+ * Static assets middleware
+ */
+app.use("/static", express.static("src/assets"));
+
+/**
  * Global route
  */
 app.use("/", routes);

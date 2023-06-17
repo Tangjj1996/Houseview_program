@@ -2,6 +2,7 @@ import path from "node:path";
 import express from "express";
 import multer from "multer";
 import { ImgMapingTable } from "./img-table-map.js";
+import type { ResponseFile } from "./interface.js";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -67,24 +68,51 @@ router.get("/getAll", (req, res) => {
  */
 router.get("/getAssets/:id", (req, res) => {
   const id = req.params.id;
-  res.send(defaultResult({}));
+  res.send(
+    defaultResult({
+      data: imgMappingTable.getById(id),
+    })
+  );
 });
 
 /**
- * Upload img with id(uniq)
+ * Upload img
  */
-router.post("/upload", upload.single("file"), (req, res) => {
+router.post("/upload", upload.single("file"), async (req, res) => {
   if (!req.file) {
     res.send(defaultResult({ success: false }));
     return;
   }
 
+  const data: ResponseFile = {};
+
+  data.filename = req.file.fieldname;
+  data.mimetype = req.file.mimetype;
+  data.originalname = req.file.originalname;
+  data.path = req.file.path;
+  data.size = req.file.size;
+
+  await imgMappingTable.insert(data);
+
   res.send(
     defaultResult({
-      data: {
-        id: req.body?.id,
-        ...req.file,
-      },
+      data,
+    })
+  );
+});
+
+router.post("/delete", async (req, res) => {
+  res.send(
+    defaultResult({
+      data: await imgMappingTable.deleteById(req.body.id),
+    })
+  );
+});
+
+router.post("/deleteAll", async (req, res) => {
+  res.send(
+    defaultResult({
+      data: await imgMappingTable.deleteAll(),
     })
   );
 });

@@ -9,12 +9,22 @@ POST http://localhost:80/upload
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="44096988.png"
+Content-Disposition: form-data; name="file"; filename="avatar.png"
 Content-Type: image/jpeg
 
-< ./public/44096988.jpeg
---boundary
-Content-Disposition: form-data; name="id"
-
-123
+< ./public/avatar.jpeg
 --boundary--
+
+###
+POST http://localhost:80/delete
+Content-Type: application/json
+
+{
+  "id": "648d68fac7fad4ff8f9e1488"
+}
+
+###
+POST http://localhost:80/deleteAll
+Content-Type: application/json
+
+{}
