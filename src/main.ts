@@ -38,7 +38,7 @@ app.listen(config.PORT, () => {
   console.log(
     chalk.green(
       "✅",
-      `Running success on port ${chalk.green.bold(config.PORT)}`,
+      `Running success on port ${chalk.yellow.bold(config.PORT)}`,
       dayjs(Date.now()).format("YYYY-MM-DD HH:mm:ss")
     )
   );

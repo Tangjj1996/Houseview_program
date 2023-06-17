@@ -1,11 +1,17 @@
 import path from "node:path";
+import fs from "node:fs";
 import express from "express";
 import multer from "multer";
+import { nanoid } from "nanoid";
 import { ImgMapingTable } from "./img-table-map.js";
-import type { ResponseFile, ResposeForm, UploadRequest } from "./interface.js";
-import { PUBLIC_STATIC } from "./constance.js";
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+import type {
+  ResponseFile,
+  ResposeForm,
+  UploadRequest,
+  FilenameRequest,
+} from "./interface.js";
+import { PUBLIC_STATIC, UPLOAD_FILE_PATH } from "./constance.js";
+import { getImgExt } from "./utils.js";
 
 const router = express.Router();
 const imgMappingTable = new ImgMapingTable();
@@ -15,13 +21,17 @@ const imgMappingTable = new ImgMapingTable();
  */
 const storage = multer.diskStorage({
   destination: function (req, filem, cb) {
+    const absolutPath = path.resolve(UPLOAD_FILE_PATH);
+    if (!fs.existsSync(absolutPath)) {
+      fs.mkdirSync(absolutPath, { recursive: true });
+    }
     // upload dir
-    cb(null, __dirname + "/assets");
+    cb(null, absolutPath);
   },
-  filename: function (req, file, cb) {
-    console.log(req);
+  filename: function (req: FilenameRequest, file, cb) {
     // uplload filename
-    cb(null, file.originalname);
+    req.nanoid = nanoid();
+    cb(null, req.nanoid + getImgExt(file.originalname));
   },
 });
 

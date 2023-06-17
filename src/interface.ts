@@ -23,3 +23,7 @@ export type TableMap = Map<string, ImageValue>;
 export interface UploadRequest extends Request {
   body: ResposeForm;
 }
+
+export interface FilenameRequest extends Request {
+  nanoid: string;
+}
