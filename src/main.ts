@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import cors from "cors";
 import config from "./config.js";
 import routes from "./route.js";
+import { PUBLIC_STATIC, TARGET_STATIC } from "./constance.js";
 
 const app = express();
 
@@ -24,6 +25,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 /**
+ * Static assets middleware
+ */
+app.use(PUBLIC_STATIC, express.static(TARGET_STATIC));
+
+/**
  * Global route
  */
 app.use("/", routes);
@@ -32,7 +38,7 @@ app.listen(config.PORT, () => {
   console.log(
     chalk.green(
       "✅",
-      `Running success on ${chalk.bgCyanBright(config.PORT)}`,
+      `Running success on port ${chalk.yellow.bold(config.PORT)}`,
       dayjs(Date.now()).format("YYYY-MM-DD HH:mm:ss")
     )
   );

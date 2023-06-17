@@ -1,9 +1,17 @@
 import path from "node:path";
+import fs from "node:fs";
 import express from "express";
 import multer from "multer";
+import { nanoid } from "nanoid";
 import { ImgMapingTable } from "./img-table-map.js";
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+import type {
+  ResponseFile,
+  ResposeForm,
+  UploadRequest,
+  FilenameRequest,
+} from "./interface.js";
+import { PUBLIC_STATIC, UPLOAD_FILE_PATH } from "./constance.js";
+import { getImgExt } from "./utils.js";
 
 const router = express.Router();
 const imgMappingTable = new ImgMapingTable();
@@ -13,12 +21,17 @@ const imgMappingTable = new ImgMapingTable();
  */
 const storage = multer.diskStorage({
   destination: function (req, filem, cb) {
+    const absolutPath = path.resolve(UPLOAD_FILE_PATH);
+    if (!fs.existsSync(absolutPath)) {
+      fs.mkdirSync(absolutPath, { recursive: true });
+    }
     // upload dir
-    cb(null, __dirname + "/assets");
+    cb(null, absolutPath);
   },
-  filename: function (req, file, cb) {
+  filename: function (req: FilenameRequest, file, cb) {
     // uplload filename
-    cb(null, file.originalname);
+    req.nanoid = nanoid();
+    cb(null, req.nanoid + getImgExt(file.originalname));
   },
 });
 
@@ -67,21 +80,57 @@ router.get("/getAll", (req, res) => {
  */
 router.get("/getAssets/:id", (req, res) => {
   const id = req.params.id;
-  res.send(defaultResult({}));
+  res.send(
+    defaultResult({
+      data: imgMappingTable.getById(id),
+    })
+  );
 });
 
 /**
- * Upload img with id(uniq)
+ * Upload img
  */
-router.post("/upload", upload.single("file"), (req, res) => {
+router.post(
+  "/upload",
+  upload.single("file"),
+  async (req: UploadRequest, res) => {
+    if (!req.file) {
+      res.send(defaultResult({ success: false }));
+      return;
+    }
+
+    const data: ResponseFile & ResposeForm = {};
+
+    data.filename = req.file.filename;
+    data.mimetype = req.file.mimetype;
+    data.originalname = req.file.originalname;
+    data.path = PUBLIC_STATIC + "/" + req.file.filename;
+    data.size = req.file.size;
+    data.address = req.body.address;
+    data.title = req.body.title;
+
+    await imgMappingTable.insert(data);
+
+    res.send(
+      defaultResult({
+        data,
+      })
+    );
+  }
+);
+
+router.post("/delete", async (req, res) => {
   res.send(
     defaultResult({
-      data: req.file
-        ? {
-            id: req.body?.id,
-            ...req.file,
-          }
-        : null,
+      data: await imgMappingTable.deleteById(req.body.id),
+    })
+  );
+});
+
+router.post("/deleteAll", async (req, res) => {
+  res.send(
+    defaultResult({
+      data: await imgMappingTable.deleteAll(),
     })
   );
 });

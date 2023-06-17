@@ -1,20 +1,39 @@
 ###
-GET  http://localhost:3333/getAll
+GET  http://localhost:80/getAll
 
 ###
-GET http://localhost:3333/getAssets/1
+GET http://localhost:80/getAssets/1
 
 ###
-POST http://localhost:3333/upload
+POST http://localhost:80/upload
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="44096988.png"
+Content-Disposition: form-data; name="file"; filename="avatar.png"
 Content-Type: image/jpeg
 
-< ./public/44096988.jpeg
---boundary
-Content-Disposition: form-data; name="id"
+< ./public/avatar.jpeg
 
-123
+--boundary
+Content-Disposition: form-data; name="address"
+
+This is a address
+--boundary
+Content-Disposition: form-data; name="title"
+
+This is a title
 --boundary--
+
+###
+POST http://localhost:80/delete
+Content-Type: application/json
+
+{
+  "id": "648d68fac7fad4ff8f9e1488"
+}
+
+###
+POST http://localhost:80/deleteAll
+Content-Type: application/json
+
+{}

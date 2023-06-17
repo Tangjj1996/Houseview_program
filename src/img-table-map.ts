@@ -1,44 +1,58 @@
-export interface ImageValue {
-  nick: string;
-  name: string;
-  id: number;
-  path: string;
-}
+import { MongoClient, ObjectId } from "mongodb";
+import config from "./config.js";
+import type { ImageValue, TableMap, ResponseFile } from "./interface.js";
+import { DB_NAME, COLLECTION_NAME } from "./constance.js";
 
-export type TableMap = Map<number, ImageValue>;
+const client = new MongoClient(config.MONGODB_URL);
+
+await client.connect();
+
+const db = client.db(DB_NAME);
+const collection = db.collection<ImageValue>(COLLECTION_NAME);
 
 export class ImgMapingTable {
   private tableMap: TableMap;
 
-  constructor() {
+  /**
+   * Init fetch latest DB
+   */
+  private async init() {
     this.tableMap = new Map();
-  }
-
-  insert(item: TableMap) {
-    for (const id of item.keys()) {
-      this.tableMap.set(id, item.get(id));
+    for (const item of await collection.find({}).toArray()) {
+      this.tableMap.set(item._id.toString(), item);
     }
   }
 
-  getById(id: number) {
-    return this.tableMap.get(id);
+  constructor() {
+    this.init();
+  }
+
+  async insert(file: ResponseFile) {
+    const { insertedId } = await collection.insertOne(file);
+    this.tableMap.set(insertedId.toString(), file);
+  }
+
+  getById(_id: string) {
+    return this.tableMap.get(_id);
   }
 
   getAll() {
     const list: ImageValue[] = [];
-    for (const id of this.tableMap.keys()) {
-      list.push(this.tableMap.get(id));
+    for (const _id of this.tableMap.keys()) {
+      list.push(this.tableMap.get(_id));
     }
     return list;
   }
 
-  deleteById(id: number) {
-    return this.tableMap.delete(id);
+  async deleteById(_id: string) {
+    this.tableMap.delete(_id);
+    return await collection.deleteOne({ _id: new ObjectId(_id) });
   }
 
-  deleteAll() {
-    for (const id of this.tableMap.keys()) {
-      this.tableMap.delete(id);
+  async deleteAll() {
+    for (const _id of this.tableMap.keys()) {
+      this.tableMap.delete(_id);
     }
+    return await collection.deleteMany({});
   }
 }
