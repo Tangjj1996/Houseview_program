@@ -19,6 +19,7 @@ const storage = multer.diskStorage({
     cb(null, __dirname + "/assets");
   },
   filename: function (req, file, cb) {
+    console.log(req);
     // uplload filename
     cb(null, file.originalname);
   },
