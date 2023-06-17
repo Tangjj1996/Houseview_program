@@ -1,0 +1,20 @@
+###
+GET  http://localhost:3333/getAll
+
+###
+GET http://localhost:3333/getAssets/1
+
+###
+POST http://localhost:3333/upload
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="44096988.png"
+Content-Type: image/jpeg
+
+< ./public/44096988.jpeg
+--boundary
+Content-Disposition: form-data; name="id"
+
+123
+--boundary--
