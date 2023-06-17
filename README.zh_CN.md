@@ -33,12 +33,16 @@ nvm use
 
 ## 安装项目依赖
 
-```
+```bash
 pnpm i
 ```
 
 ## 本地启动项目
 
-```
+```bash
 pnpm start
 ```
+
+## 本地调试
+
+安装[REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)

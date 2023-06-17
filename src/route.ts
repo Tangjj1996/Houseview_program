@@ -74,14 +74,17 @@ router.get("/getAssets/:id", (req, res) => {
  * Upload img with id(uniq)
  */
 router.post("/upload", upload.single("file"), (req, res) => {
+  if (!req.file) {
+    res.send(defaultResult({ success: false }));
+    return;
+  }
+
   res.send(
     defaultResult({
-      data: req.file
-        ? {
-            id: req.body?.id,
-            ...req.file,
-          }
-        : null,
+      data: {
+        id: req.body?.id,
+        ...req.file,
+      },
     })
   );
 });

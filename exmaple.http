@@ -1,11 +1,11 @@
 ###
-GET  http://localhost:3333/getAll
+GET  http://localhost:80/getAll
 
 ###
-GET http://localhost:3333/getAssets/1
+GET http://localhost:80/getAssets/1
 
 ###
-POST http://localhost:3333/upload
+POST http://localhost:80/upload
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
