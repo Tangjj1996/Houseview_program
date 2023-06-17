@@ -45,4 +45,8 @@ pnpm start
 
 ## 本地调试
 
-安装[REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
+vsCode安装[REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)插件
+
+## 接口说明
+
+参见[example.http](./exmaple.http)文件
