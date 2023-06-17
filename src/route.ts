@@ -2,7 +2,7 @@ import path from "node:path";
 import express from "express";
 import multer from "multer";
 import { ImgMapingTable } from "./img-table-map.js";
-import type { ResponseFile } from "./interface.js";
+import type { ResponseFile, ResposeForm, UploadRequest } from "./interface.js";
 import { PUBLIC_STATIC } from "./constance.js";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -79,28 +79,34 @@ router.get("/getAssets/:id", (req, res) => {
 /**
  * Upload img
  */
-router.post("/upload", upload.single("file"), async (req, res) => {
-  if (!req.file) {
-    res.send(defaultResult({ success: false }));
-    return;
+router.post(
+  "/upload",
+  upload.single("file"),
+  async (req: UploadRequest, res) => {
+    if (!req.file) {
+      res.send(defaultResult({ success: false }));
+      return;
+    }
+
+    const data: ResponseFile & ResposeForm = {};
+
+    data.filename = req.file.filename;
+    data.mimetype = req.file.mimetype;
+    data.originalname = req.file.originalname;
+    data.path = PUBLIC_STATIC + "/" + req.file.filename;
+    data.size = req.file.size;
+    data.address = req.body.address;
+    data.title = req.body.title;
+
+    await imgMappingTable.insert(data);
+
+    res.send(
+      defaultResult({
+        data,
+      })
+    );
   }
-
-  const data: ResponseFile = {};
-
-  data.filename = req.file.filename;
-  data.mimetype = req.file.mimetype;
-  data.originalname = req.file.originalname;
-  data.path = PUBLIC_STATIC + "/" + req.file.filename;
-  data.size = req.file.size;
-
-  await imgMappingTable.insert(data);
-
-  res.send(
-    defaultResult({
-      data,
-    })
-  );
-});
+);
 
 router.post("/delete", async (req, res) => {
   res.send(

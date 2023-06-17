@@ -13,6 +13,15 @@ Content-Disposition: form-data; name="file"; filename="avatar.png"
 Content-Type: image/jpeg
 
 < ./public/avatar.jpeg
+
+--boundary
+Content-Disposition: form-data; name="address"
+
+This is a address
+--boundary
+Content-Disposition: form-data; name="title"
+
+This is a title
 --boundary--
 
 ###
