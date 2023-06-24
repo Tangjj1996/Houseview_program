@@ -9,7 +9,13 @@ POST http://localhost:80/upload
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="avatar.png"
+Content-Disposition: form-data; name="file1"; filename="avatar.png"
+Content-Type: image/jpeg
+
+< ./public/avatar.jpeg
+
+--boundary
+Content-Disposition: form-data; name="file2"; filename="avatar.png"
 Content-Type: image/jpeg
 
 < ./public/avatar.jpeg

@@ -90,34 +90,34 @@ router.get("/getAssets/:id", (req, res) => {
 /**
  * Upload img
  */
-router.post(
-  "/upload",
-  upload.single("file"),
-  async (req: UploadRequest, res) => {
-    if (!req.file) {
-      res.send(defaultResult({ success: false }));
-      return;
-    }
-
-    const data: ResponseFile & ResposeForm = {};
-
-    data.filename = req.file.filename;
-    data.mimetype = req.file.mimetype;
-    data.originalname = req.file.originalname;
-    data.path = PUBLIC_STATIC + "/" + req.file.filename;
-    data.size = req.file.size;
-    data.address = req.body.address;
-    data.title = req.body.title;
-
-    await imgMappingTable.insert(data);
-
-    res.send(
-      defaultResult({
-        data,
-      })
-    );
+router.post("/upload", upload.any(), async (req: UploadRequest, res) => {
+  if (!(req.files && (req.files as []).length > 0)) {
+    res.send(defaultResult({ success: false }));
+    return;
   }
-);
+
+  const data: (ResponseFile & ResposeForm)[] = [];
+
+  for (const file of req.files as Express.Multer.File[]) {
+    const item = {
+      filename: file.fieldname,
+      mimetype: file.mimetype,
+      originalname: file.originalname,
+      path: PUBLIC_STATIC + "/" + file.filename,
+      size: file.size,
+      address: req.body.address,
+      title: req.body.title,
+    };
+    data.push(item);
+    await imgMappingTable.insert(item);
+  }
+
+  res.send(
+    defaultResult({
+      data,
+    })
+  );
+});
 
 router.post("/delete", async (req, res) => {
   res.send(
